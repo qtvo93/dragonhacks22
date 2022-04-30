@@ -59,7 +59,7 @@ def welcome():
         user_phone = st.text_input("Phone")
         submit_button = st.form_submit_button('Subscribe')
         if submit_button:
-            st.write("You are now in the list {}".format(user_phone))    
+            st.write("You are now in the list {}. You will be notifed every 1 hour if the Air Quality index at the location is above 75".format(user_phone))    
             time.sleep(5)
             legacy_caching.clear_cache()   
             
