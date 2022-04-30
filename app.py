@@ -39,4 +39,9 @@ def welcome():
     # if btn2 :
     #     st.write("here")
 
+def subscribe():
+    with st.form(key='subscribe_button'):
+        submit_button = st.form_submit_button('Subscribe')
+
 welcome()
+subscribe()
