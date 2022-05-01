@@ -66,7 +66,7 @@ def welcome():
             'lat' : [lat],
             'lon' : [lon]
                 })
-            st.map(data)
+            st.map(data, zoom=9)
 
 if __name__ == "__main__":
     welcome()
