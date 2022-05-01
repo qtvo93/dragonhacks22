@@ -11,16 +11,24 @@ from sqlalchemy.orm import sessionmaker
 from sqldatabase import UserInput
 
 
-st.markdown("""
-Welcome to our web app *
-Dragonhacks 2022 *
-App written by:
-Quoc Thinh Vo - Tuong Tran - Hiep Nguyen
-""")
+#%%
+st.title('Welcome to AirCare')
+
+#---------------------------------#
+# About
+expander_bar = st.expander("About the AirCare App")
+
+expander_bar.markdown("""
+* **AirCare App** is a simple Web-App to demonstrate Python, SQL and Data Science Streamlit framework
+* **Version 1.0:** App written by Quoc Thinh Vo - Tuong Tran - Hiep Nguyen.                                                                                                                                     
+    
+""" )
+
+#---------------------------------#
 
 def welcome():
-    st.title("Going to a new city and worry about the real-time Air Quality?")
-    st.subheader("Simply enter a city name to look for real-time Air Quality index")
+    st.write("Going to a new city and worry about the real-time Air Quality?")
+    st.subheader("Enter a city name to look for real-time Air Quality index")
     # st.title("Login")
     # st.write("We will login here")
     # with st.form(key='my_form'):
