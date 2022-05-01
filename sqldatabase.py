@@ -8,10 +8,10 @@ Base = declarative_base()
 
 class UserInput(Base):
     __tablename__ = "userinputs"
-    
-    id = Column(Integer)
-    userPhone = Column(String, primary_key = True)
-    city = Column(String)   
+    id = Column(Integer, primary_key=True)
+    email = Column(String)
+    userPhone = Column(String)
+    city = Column(String) 
    
 
 if __name__ == "__main__":

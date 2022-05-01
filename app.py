@@ -12,8 +12,8 @@ from sqldatabase import UserInput
 
 
 st.markdown("""
-Welcome to our new app ***
-Dragonhacks 2022 *** 
+Welcome to our web app *
+Dragonhacks 2022 *
 App written by:
 Quoc Thinh Vo - Tuong Tran - Hiep Nguyen
 """)
@@ -39,46 +39,35 @@ def welcome():
     #             st.write("Failed!")
     with st.form(key='request_api'):
         city_name = st.text_input("City")
-        user_phone = st.text_input("Phone")      
+        user_phone = st.text_input("Phone") 
+        user_email = st.text_input("Email")     
         request_button = st.form_submit_button("Request")
         if request_button:
             request_url = "https://api.waqi.info/feed/{}/?token=5938b35ceb20607ac17a113fe733908af8fbb1b7".format(city_name)
             #st.write(city_name)
             req = requests.get(request_url)
             if req.status_code == 200:
-                st.write("real-time Air Quality index in {}:".format(city_name))
+                st.write("Real-time Air Quality index in {}:".format(city_name))
                 st.write(req.json()["data"]["aqi"]) 
-                lat, lon = req.json()["data"]["city"]["geo"][0],req.json()["data"]["city"]["geo"][1]
+                lat, lon = req.json()["data"]["city"]["geo"][0], req.json()["data"]["city"]["geo"][1]
             #st.write(user_email)
             
             engine = create_engine('sqlite:///users_db.sqlite')
             Session = sessionmaker(bind=engine)
             sess= Session()
-            st.write("You are now in the list {}. You will be notifed every 1 hour if the Air Quality index at the location is above 75".format(user_phone))  
-            entry = UserInput(userPhone=user_phone, city=city_name)
+            st.write("Your phone number is now in the list {}. You will be notifed every 2 hours about the Air Quality index at {}".format(user_phone, city_name))  
+            entry = UserInput(userPhone=user_phone, city=city_name, email = user_email)
             sess.add(entry)
             sess.commit()  
             time.sleep(5)
             legacy_caching.clear_cache()   
             data = pd.DataFrame({
-            'awesome cities' : [city_name],
+            'cities' : [city_name],
             'lat' : [lat],
             'lon' : [lon]
                 })
             st.map(data)
 
-
-        
-            
-    # btn2 = st.button('Need an acount? register here')
-    # if btn2 :
-
-# def subscribe():
-#     with st.form(key='subscribe_button'):
-#         user_email = st.text_input("Email")
-#         submit_button = st.form_submit_button('Subscribe')
-#         if submit_button:
-#             st.write(user_email)
 if __name__ == "__main__":
     welcome()
 

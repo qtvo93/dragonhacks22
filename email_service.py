@@ -7,10 +7,10 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqldatabase import UserInput
-
+import os
 # create a Twilio client
-account_sid = "AC2e3aef6ecd5206ee492f831333615388"
-auth_token = ""
+account_sid = os.environ["ACCOUNT_ID"]
+auth_token = os.environ["AUTH_TOKEN"]
 client = Client(account_sid, auth_token)
 
 # user phone number here
