@@ -9,11 +9,13 @@ from sqlalchemy.orm import sessionmaker
 from sqldatabase import UserInput
 import os
 from dotenv import load_dotenv
+from contact_service import send_alert_mail
 
 load_dotenv()
 # create a Twilio client
 account_sid = os.getenv("ACCOUNT_ID")
 auth_token = os.getenv("AUTH_TOKEN")
+
 client = Client(account_sid, auth_token)
 
 # user phone number here
@@ -31,15 +33,18 @@ while True:
         req = requests.get(request_url)
         aqi_number = req.json()["data"]["aqi"]
         messaging_service_sid ="+19897350269"
+        body = "Hello! The real-time Air Quality index at location {} is: {}".format(city_name, aqi_number)
         message = client.messages.create(
             from_=messaging_service_sid,
             to=phone_number,  
-            body="Hello! The real-time Air Quality index at location {} is: {}".format(city_name, aqi_number),
+            body=body,
             schedule_type='fixed',
             send_at=datetime.utcnow(),
         )
 
+        email = item.email
+        print('email is ',email)
+        send_alert_mail(email,body)
         print(message.sid)
         print("Sending messages.....")
-        # currently 30 seconds for testing purposes
-        time.sleep(30)
+        time.sleep(60*60)
