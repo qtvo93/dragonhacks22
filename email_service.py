@@ -41,4 +41,5 @@ while True:
 
         print(message.sid)
         print("Sending messages.....")
-        time.sleep(60*60)
+        # currently 30 seconds for testing purposes
+        time.sleep(30)
