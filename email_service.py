@@ -3,30 +3,39 @@ import os
 from twilio.rest import Client
 import time
 import requests
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqldatabase import UserInput
+
 # create a Twilio client
 account_sid = "AC2e3aef6ecd5206ee492f831333615388"
-auth_token = "b627fbe4ad19b6aad50e2a8fb3f8fe0d"
+auth_token = ""
 client = Client(account_sid, auth_token)
 
 # user phone number here
-phone_number = '+12672664793'
+engine = create_engine('sqlite:///users_db.sqlite')
+Session = sessionmaker(bind=engine)
+sess= Session()
+results = sess.query(UserInput).all()
 
-# schedule message to be sent 1 minutes after current time
-city_name = "philadelphia"
 while True:
     # send the SMS
-    request_url = "https://api.waqi.info/feed/{}/?token=5938b35ceb20607ac17a113fe733908af8fbb1b7".format(city_name)
-    req = requests.get(request_url)
-    aqi_number = req.json()["data"]["aqi"]
-    messaging_service_sid ="+19897350269"
-    message = client.messages.create(
-        from_=messaging_service_sid,
-        to=phone_number,  # ← your phone number here
-        body="Hello user! The real-time Air Quality index at location ??? is: {}".format(aqi_number),
-        schedule_type='fixed',
-        send_at=datetime.utcnow(),
-    )
+    for item in results:   
+        phone_number= item.userPhone
+        city_name = item.city
+        request_url = "https://api.waqi.info/feed/{}/?token=5938b35ceb20607ac17a113fe733908af8fbb1b7".format(city_name)
+        req = requests.get(request_url)
+        aqi_number = req.json()["data"]["aqi"]
+        messaging_service_sid ="+19897350269"
+        message = client.messages.create(
+            from_=messaging_service_sid,
+            to=phone_number,  
+            body="Hello! The real-time Air Quality index at location {} is: {}".format(city_name, aqi_number),
+            schedule_type='fixed',
+            send_at=datetime.utcnow(),
+        )
 
-    print(message.sid)
-    print("Sending messages.....")
-    time.sleep(60*30)
+        print(message.sid)
+        print("Sending messages.....")
+        time.sleep(60*60)
