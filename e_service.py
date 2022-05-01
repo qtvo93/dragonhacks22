@@ -32,19 +32,20 @@ while True:
         request_url = "https://api.waqi.info/feed/{}/?token=5938b35ceb20607ac17a113fe733908af8fbb1b7".format(city_name)
         req = requests.get(request_url)
         aqi_number = req.json()["data"]["aqi"]
-        messaging_service_sid ="+19897350269"
-        body = "Hello! The real-time Air Quality index at location {} is: {}".format(city_name, aqi_number)
-        message = client.messages.create(
-            from_=messaging_service_sid,
-            to=phone_number,  
-            body=body,
-            schedule_type='fixed',
-            send_at=datetime.utcnow(),
-        )
+        if aqi_number > 10:
+            messaging_service_sid ="+19897350269"
+            body = "Hello! The real-time Air Quality index at location {} is: {}".format(city_name, aqi_number)
+            message = client.messages.create(
+                from_=messaging_service_sid,
+                to=phone_number,  
+                body=body,
+                schedule_type='fixed',
+                send_at=datetime.utcnow(),
+            )
 
-        email = item.email
-        print('email is ',email)
-        send_alert_mail(email,body)
-        print(message.sid)
-        print("Sending messages.....")
-        time.sleep(60*60)
+            email = item.email
+            print('email is ',email)
+            send_alert_mail(email,body)
+            print(message.sid)
+            print("Sending messages.....")
+        time.sleep(20)

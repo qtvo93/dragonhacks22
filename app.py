@@ -19,7 +19,7 @@ st.title('Welcome to AirCare')
 expander_bar = st.expander("About the AirCare App")
 
 expander_bar.markdown("""
-* **AirCare App** is a simple Web-App to demonstrate Python, SQL and Data Science Streamlit framework
+* **AirCare App** is a simple Web-App to demonstrate Python, SQLalchemy, Twilio, Mailgun, and Data Science Streamlit framework
 * **Version 1.0:** App written by Quoc Thinh Vo - Tuong Tran - Hiep Nguyen.                                                                                                                                     
     
 """ )
@@ -63,7 +63,7 @@ def welcome():
             engine = create_engine('sqlite:///users_db.sqlite')
             Session = sessionmaker(bind=engine)
             sess= Session()
-            st.write("Your phone number is now in the list {}. You will be notifed every 2 hours about the Air Quality index at {}".format(user_phone, city_name))  
+            st.write("Your phone number is now in the list {}. You will be notifed every hour about the Air Quality index at {}".format(user_phone, city_name))  
             entry = UserInput(userPhone=user_phone, city=city_name, email = user_email)
             sess.add(entry)
             sess.commit()  
@@ -76,7 +76,25 @@ def welcome():
                 })
             st.map(data, zoom=9)
 
+def unsub():
+    with st.form(key='unsubscribe'):
+        st.write("Want to unsubscribe from auto texting service?")
+        user_phone = st.text_input("Phone") 
+        request_button = st.form_submit_button("Unsubscribe")
+        if request_button:
+            engine = create_engine('sqlite:///users_db.sqlite')
+            Session = sessionmaker(bind=engine)
+            sess = Session()
+            results = sess.query(UserInput).all()
+            for result in results:
+                if result.userPhone == user_phone:
+                    sess.delete(result)
+                    sess.commit() 
+                    st.write("You are now unsubscribed from the alert list?")
+                    legacy_caching.clear_cache()
+
 if __name__ == "__main__":
     welcome()
+    unsub()
 
 
